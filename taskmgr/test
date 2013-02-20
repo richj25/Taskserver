@@ -1,0 +1,4 @@
+./taskmgr add client gold
+./taskmgr add client tin
+./taskmgr add task "/bin/touch /home/richj/test" gold
+./taskmgr list tasks

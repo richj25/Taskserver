@@ -1,0 +1,31 @@
+#!/usr/bin/python 
+
+import pickle
+import command
+import serverthreads
+import globaldefines
+import SocketServer
+import flags
+import threading
+import time
+
+class TaskdRequestHandler(SocketServer.BaseRequestHandler):
+    def handle(self):
+        pick = self.request.recv(1024)
+        com = pickle.loads(pick)
+        reply = command.CommandProcessor.execute_command(*com)
+        for str in reply: 
+            self.request.send(str)
+            self.request.recv(1024)
+        self.request.send("Done")
+
+clientManagerThread = serverthreads.ClientManagerThread()
+clientManagerThread.start()
+
+TaskdRequestServer = SocketServer.TCPServer(("0.0.0.0", globaldefines.REQUEST_PORT), TaskdRequestHandler)
+try:
+    TaskdRequestServer.serve_forever()
+except KeyboardInterrupt:
+    flags.shutdown = True
+    TaskdRequestServer.socket.close()
+

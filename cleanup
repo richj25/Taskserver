@@ -1,0 +1,5 @@
+cd common; rm *.pyc
+cd ../taskclient; rm *.pyc
+cd ../taskd; rm *.pyc
+cd ../taskmgr; rm *.pyc
+cd ../taskclient; rm *.pyc

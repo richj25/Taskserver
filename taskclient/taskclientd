@@ -1,0 +1,30 @@
+#!/usr/bin/python
+
+import time
+import threading
+import socket
+import flags
+import SocketServer
+import globaldefines
+from netutils import *
+
+class TaskClientCommandHandler(SocketServer.BaseRequestHandler):
+    def handle(self):
+        try:
+            command = receive(self.request,"No command sent from task server")
+            if command == "Activate":
+                self.request.send(socket.gethostname())
+                server = receive(self.request,"No server name sent from task server")
+                with open(globaldefines.SERVERFILENAME,"w") as f:
+                    f.write(server)
+                self.request.send("Activated") 
+        except TimeoutError, (message):
+            print message
+
+TaskClientServer = SocketServer.TCPServer(("0.0.0.0", globaldefines.TASKCLIENT_PORT), TaskClientCommandHandler)
+try:
+   TaskClientServer.serve_forever()
+except KeyboardInterrupt:
+    flags.shutdown = True
+    TaskClientServer.socket.close()
+

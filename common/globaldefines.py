@@ -1,0 +1,3 @@
+COMMAND_PORT = 12346
+REQUEST_PORT = 12347
+SERVERFILENAME = "/tmp/taskservernamefile"
